@@ -36,14 +36,31 @@ func TestTools_RandomString(t *testing.T) {
 	}
 }
 
-func TestTools_UploadOneFile(t *testing.T) {
+func TestTools_UploadFiles(t *testing.T) {
 	tests := []struct {
 		name          string
 		allowedTypes  []string
 		renameFile    bool
 		errorExpected bool
 	}{
-		{"allowed no rename", []string{"image/jpeg", "image/png"}, false, false},
+		{
+			name:          "allowed no rename",
+			allowedTypes:  []string{"image/jpeg", "image/png"},
+			renameFile:    false,
+			errorExpected: false,
+		},
+		{
+			name:          "allowed rename",
+			allowedTypes:  []string{"image/jpeg", "image/png"},
+			renameFile:    true,
+			errorExpected: false,
+		},
+		{
+			name:          "not allowed",
+			allowedTypes:  []string{"image/jpeg"},
+			renameFile:    false,
+			errorExpected: true,
+		},
 	}
 
 	for _, entry := range tests {
@@ -85,7 +102,7 @@ func TestTools_UploadOneFile(t *testing.T) {
 				if err != nil {
 					t.Error("error decoding image", err)
 				}
-
+				// Write the image to the multipart writer
 				err = png.Encode(part, img)
 			}()
 
@@ -99,29 +116,51 @@ func TestTools_UploadOneFile(t *testing.T) {
 			testTools.AllowedFileTypes = entry.allowedTypes
 			// Call UploadFiles with the pipe reader request, save to 'uploads' folder
 			uploadedFiles, err := testTools.UploadFiles(req, "./testdata/uploads/", entry.renameFile)
+
 			// Fail the test if the error is not nil and was not expected
-			if err != nil && !entry.errorExpected {
+			if err != nil && entry.errorExpected == false {
 				t.Errorf("expected no error, but received %+v", err)
 			}
 
-			// Build a string with the new file name
-			fileStr := fmt.Sprintf("./testdata/uploads/%s", uploadedFiles[0].NewFileName)
-
-			// Check if the file did not get uploaded
+			// Clean up if the file did get uploaded
 			if !entry.errorExpected {
-				if _, err := os.Stat(fileStr); os.IsNotExist(err) {
+				if _, err := os.Stat(fmt.Sprintf("./testdata/uploads/%s", uploadedFiles[0].NewFileName)); os.IsNotExist(err) {
 					t.Errorf("expected file to exist: %s", err.Error())
 				}
-
-				// Clean up
-				_ = os.Remove(fileStr)
+				// // clean up
+				// _ = os.Remove(fmt.Sprintf("./testdata/uploads/%s", uploadedFiles[0].NewFileName))
 			}
 
 			// If error is expected and not received, log it
 			if entry.errorExpected && err == nil {
 				t.Errorf("expected an error, but none received")
 			}
-
+			wg.Wait()
 		})
+
 	}
+
+	// Perform cleanup of files inside the uploads folder (keeping the folder itself)
+	err := removeUploads("./testdata/uploads/")
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func removeUploads(dir string) error {
+	// read files
+	files, err := os.ReadDir(dir)
+	if err != nil {
+		return fmt.Errorf("failed to read files from provided directory %s", dir)
+	}
+
+	for _, file := range files {
+		filePath := fmt.Sprintf("%s%s", dir, file.Name())
+		err := os.Remove(filePath)
+		if err != nil {
+			return fmt.Errorf("failed to remove file with name %s", file.Name())
+		}
+	}
+
+	return nil
 }

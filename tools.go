@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-const randomStrSource = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+"
+const randomStrSource = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!=+"
 
 // Tools is the type used to instantiate this module.
 // Any variable of this type will have access to all the methods
