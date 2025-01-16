@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"runtime"
 	"sync"
 	"testing"
 )
@@ -127,8 +128,13 @@ func TestTools_UploadFiles(t *testing.T) {
 				if _, err := os.Stat(fmt.Sprintf("./testdata/uploads/%s", uploadedFiles[0].NewFileName)); os.IsNotExist(err) {
 					t.Errorf("expected file to exist: %s", err.Error())
 				}
-				// // clean up
-				// _ = os.Remove(fmt.Sprintf("./testdata/uploads/%s", uploadedFiles[0].NewFileName))
+
+				runtime.GC() // Forces Go runtime to release unused resources, this solves file lock issue on Windows
+				// Clean up
+				err = os.Remove(fmt.Sprintf("./testdata/uploads/%s", uploadedFiles[0].NewFileName))
+				if err != nil {
+					t.Errorf("failed to remove file %s, %+v", uploadedFiles[0].NewFileName, err)
+				}
 			}
 
 			// If error is expected and not received, log it
@@ -139,28 +145,4 @@ func TestTools_UploadFiles(t *testing.T) {
 		})
 
 	}
-
-	// Perform cleanup of files inside the uploads folder (keeping the folder itself)
-	err := removeUploads("./testdata/uploads/")
-	if err != nil {
-		t.Error(err)
-	}
-}
-
-func removeUploads(dir string) error {
-	// read files
-	files, err := os.ReadDir(dir)
-	if err != nil {
-		return fmt.Errorf("failed to read files from provided directory %s", dir)
-	}
-
-	for _, file := range files {
-		filePath := fmt.Sprintf("%s%s", dir, file.Name())
-		err := os.Remove(filePath)
-		if err != nil {
-			return fmt.Errorf("failed to remove file with name %s", file.Name())
-		}
-	}
-
-	return nil
 }
