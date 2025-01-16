@@ -1,20 +1,26 @@
-# Toolkit Package
+# 🛠️ Toolkit Package
 
-## Overview
+## 🔍 Overview
 
 This repository contains a toolkit with reusable functions for common tasks encountered in web development with Go.
 The goal is to avoid external dependencies and provide thorough test coverage.
 
-## Description
+## 📄 Description
 
 The toolkit package provides essential helper methods for generating random strings and handling file uploads. The key functionality includes:
 
 - **Random String Generation** generates cryptographically secure random strings for various use cases.
 - **File Uploads** upload of one or more files, check file type validity, and save them to a directory with optional renaming.
 
-## Functions
+## Installation
 
-#### RandomString
+```bash
+go get -u github.com/kweeuhree/toolbox
+```
+
+## ⚙️ Functions
+
+#### ➡️RandomString
 
 Generates a random string of length n using a predefined set of characters (randomStrSource). The string is generated cryptographically securely using Go's crypto/rand package.
 
@@ -34,7 +40,7 @@ randomStr := t.RandomString(16)
 fmt.Println(randomStr)  // e.g., "aB3fGz0a8sK2LsD8"
 ```
 
-#### UploadFiles
+#### ➡️UploadFiles
 
 Uploads one or more files to a specified directory and gives the files a random name.
 
@@ -61,7 +67,7 @@ for _, file := range uploadedFiles {
 }
 ```
 
-#### UploadOneFile
+#### ➡️UploadOneFile
 
 Convenience method that calls `UploadFiles` expecting only one file to be uploaded.
 
@@ -86,7 +92,7 @@ if err != nil {
 fmt.Println("Uploaded file:", uploadedFile.NewFileName)
 ```
 
-## Error Handling
+## 🚩 Error Handling
 
 UploadFiles and UploadOneFile will return an error if:
 
@@ -95,14 +101,26 @@ UploadFiles and UploadOneFile will return an error if:
 - There are issues opening or saving the file.
   Make sure to handle these errors appropriately in your application.
 
-## Dependencies
+## 📦 Dependencies
 
 This toolkit relies only on standard Go packages.
 
-## Testing
+## ✅ Testing
 
 The toolkit uses built-in `testing` package for testing app logic, and provides comprehensive tests that ensure that the functions behave correctly for different input conditions and handle edge cases, such as file type restrictions and renaming.
 
-## License
+## 🚀 Planned enhancements
+
+- [ ] Read JSON
+- [ ] Write JSON
+- [ ] Produce a JSON encoded error response
+- [x] Upload a file to a specified directory
+- [ ] Download a static file
+- [x] Get a random string of provided length
+- [ ] Post JSON to a remote service
+- [ ] Create a directory, including all parent directories, if it does not already exist
+- [ ] Create a URL safe slug from a string
+
+## 📃 License
 
 This package is licensed under the MIT License. See LICENSE for more information.
