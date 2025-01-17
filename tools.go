@@ -2,7 +2,10 @@ package toolkit
 
 import (
 	"crypto/rand" // cryptographically secure random number generator
+	"errors"
 	"os"
+	"regexp"
+	"strings"
 )
 
 // Tools is the type used to instantiate this module.
@@ -37,7 +40,7 @@ func (t *Tools) RandomString(n int) string {
 	return string(str)
 }
 
-// Creates a new directory if it does not exist
+// CreateNewDirectory() creates a new directory if it does not exist
 func (t *Tools) CreateNewDirectory(path string) error {
 	// Set a mode to set a regular directory with following permissions:
 	// - Owner: read, write, execute
@@ -53,4 +56,25 @@ func (t *Tools) CreateNewDirectory(path string) error {
 		}
 	}
 	return nil
+}
+
+// Slugify() takes in a string and replaces all but letters and numbers with hyphens
+func (t *Tools) Slugify(str string) (string, error) {
+	trimmmed := strings.Trim(str, " ")
+	if len(trimmmed) == 0 {
+		return "", errors.New("empty string not permitted")
+	}
+
+	// Define a pattern for a string of any length containing any letter or digit
+	regex := regexp.MustCompile(`[^a-z\d]+`)
+
+	slug := regex.ReplaceAllString(strings.ToLower(trimmmed), "-")
+
+	// Ensure the slug is not empty and does not end or start with a dash
+	slug = strings.Trim(slug, "-")
+	if len(slug) == 0 {
+		return "", errors.New("resultant string is empty")
+	}
+
+	return slug, nil
 }

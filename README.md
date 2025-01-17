@@ -118,8 +118,8 @@ The toolkit uses built-in `testing` package for testing app logic, and provides 
 - [ ] Download a static file
 - [x] Get a random string of provided length
 - [ ] Post JSON to a remote service
-- [ ] Create a directory, including all parent directories, if it does not already exist
-- [ ] Create a URL safe slug from a string
+- [x] Create a directory, including all parent directories, if it does not already exist
+- [x] Create a URL safe slug from a string
 
 ## 📃 License
 
