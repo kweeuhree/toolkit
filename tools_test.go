@@ -1,6 +1,9 @@
 package toolkit
 
 import (
+	"io"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
 )
@@ -86,6 +89,39 @@ func TestTools_Slugify(t *testing.T) {
 				t.Errorf("expected no error, but received %+v", err)
 			}
 		})
+	}
+
+}
+
+func TestTools_DownloadStaticFile(t *testing.T) {
+	// Define and initialize response recorder and request
+	resp := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodPost, "/download", nil)
+	// Initalize tools
+	tools := &Tools{}
+
+	// Call TestTools_DownloadStaticFile
+	tools.DownloadStaticFile(resp, req, "./testdata", "img.png", "hello-world.png")
+
+	// Get result of the response
+	result := resp.Result()
+	// Close the body to ensure no resource leak
+	defer result.Body.Close()
+
+	// Check if the file downloaded entirely by checking content length
+	if result.Header["Content-Length"][0] != "5003" {
+		t.Error("wrong content-length of", result.Header["Content-Length"][0])
+	}
+
+	// Check headers
+	if result.Header["Content-Disposition"][0] != "attachment; filename=\"hello-world.png\"" {
+		t.Error("wrong content-length of", result.Header["Content-Length"][0])
+	}
+
+	// Check for an error
+	_, err := io.ReadAll(result.Body)
+	if err != nil {
+		t.Error(err)
 	}
 
 }

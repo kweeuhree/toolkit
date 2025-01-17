@@ -3,7 +3,10 @@ package toolkit
 import (
 	"crypto/rand" // cryptographically secure random number generator
 	"errors"
+	"fmt"
+	"net/http"
 	"os"
+	"path"
 	"regexp"
 	"strings"
 )
@@ -77,4 +80,16 @@ func (t *Tools) Slugify(str string) (string, error) {
 	}
 
 	return slug, nil
+}
+
+// DownloadStaticFile() downloads a file from the server to the local users machine
+func (t *Tools) DownloadStaticFile(w http.ResponseWriter, r *http.Request, dirPath, fileName, displayName string) {
+	// Construct the file path by joining the provided directory path and file name
+	filePath := path.Join(dirPath, fileName)
+
+	// Set the response header to indicate a file attachment with the specified display name
+	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", displayName))
+
+	// Serve the file to the user, prompting a download
+	http.ServeFile(w, r, filePath)
 }
