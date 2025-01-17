@@ -23,6 +23,7 @@ const randomStrSource = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012
 // Expectes only one file to be uploaded
 func (t *Tools) UploadOneFile(r *http.Request, uploadDir string, rename ...bool) (*UploadedFile, error) {
 	renameFile := true
+
 	if len(rename) > 0 {
 		renameFile = rename[0]
 	}
@@ -39,6 +40,8 @@ func (t *Tools) UploadOneFile(r *http.Request, uploadDir string, rename ...bool)
 // Returns a slice of with the newly named files, the original file names, file sizes, and
 // a potential error. If the optional last parameter is set to true, the files will not be renamed
 func (t *Tools) UploadFiles(r *http.Request, uploadDir string, rename ...bool) ([]*UploadedFile, error) {
+	// Create uploads directory if it doesnt exist
+	err := t.CreateNewDirectory("./testdata/uploads")
 	// Rename by default
 	renameFile := true
 
@@ -57,7 +60,7 @@ func (t *Tools) UploadFiles(r *http.Request, uploadDir string, rename ...bool) (
 	}
 
 	// Check for an error when parsing the request
-	err := r.ParseMultipartForm(int64(t.MaxFileSize))
+	err = r.ParseMultipartForm(int64(t.MaxFileSize))
 	if err != nil {
 		return nil, errors.New("the uploaded file is too big")
 	}
