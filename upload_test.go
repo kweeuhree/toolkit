@@ -14,7 +14,7 @@ import (
 	"testing"
 )
 
-var tests = []struct {
+var uploadTests = []struct {
 	name          string
 	allowedTypes  []string
 	renameFile    bool
@@ -41,7 +41,7 @@ var tests = []struct {
 }
 
 func TestTools_UploadFiles(t *testing.T) {
-	for _, entry := range tests {
+	for _, entry := range uploadTests {
 		t.Run(entry.name, func(t *testing.T) {
 			// Set up a pipe to avoid buffering while simulating a multipart file upload
 			pr, pw := io.Pipe()
@@ -125,7 +125,7 @@ func TestTools_UploadFiles(t *testing.T) {
 }
 
 func TestTools_UploadOneFile(t *testing.T) {
-	for _, entry := range tests {
+	for _, entry := range uploadTests {
 		t.Run(entry.name, func(t *testing.T) {
 			// Set up a pipe to avoid buffering while simulating a multipart file upload
 			pr, pw := io.Pipe()

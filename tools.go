@@ -15,8 +15,10 @@ import (
 // Any variable of this type will have access to all the methods
 // with the receiver *Tools.
 type Tools struct {
-	MaxFileSize      int      // Specify the max size of a file permitted for uploading
-	AllowedFileTypes []string // Specify the file types to be permitted for uploading
+	MaxFileSize        int      // Specify the max size of a file permitted for uploading
+	AllowedFileTypes   []string // Specify the file types to be permitted for uploading
+	MaxJSONSize        int      // Specify the max size of a JSON payload
+	AllowUnknownFields bool     // Permit the unknown fields
 }
 
 // RandomString() takes in an integer that defines length of random string.
