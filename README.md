@@ -11,6 +11,9 @@ The toolkit package provides essential helper methods for generating random stri
 
 - **Random String Generation** generates cryptographically secure random strings for various use cases.
 - **File Uploads** upload of one or more files, check file type validity, and save them to a directory with optional renaming.
+- **JSON functionalilty** provides essential helper methods for handling JSON in HTTP requests and responses, such as read and write JSON files, send a JSON error response.
+
+**Test coverage**: 89.9% of statements.
 
 ## Installation
 
@@ -92,6 +95,81 @@ if err != nil {
 fmt.Println("Uploaded file:", uploadedFile.NewFileName)
 ```
 
+#### ReadJSON
+
+Reads and decodes JSON data from an HTTP request body into the provided 'data' object. It validates the JSON format, checks the request size, and handles various error scenarios, including syntax errors, unknown fields, and unexpected EOF.
+
+**Parameters**:
+
+- `w`: The HTTP response writer.
+- `r`: The HTTP request containing the JSON body.
+- `data`: A pointer to the struct where the decoded JSON data will be stored.
+
+**Returns**:
+
+- An error if the JSON is malformed or the body exceeds the allowed size.
+
+**Example**:
+
+```go
+t := &toolkit.Tools{}
+var myData MyStruct
+err := t.ReadJSON(w, r, &myData)
+if err != nil {
+    fmt.Println("Error:", err)
+}
+```
+
+#### ➡️ WriteJSON
+
+Writes a JSON response with the provided status, data, and optional custom headers.
+
+**Parameters**:
+
+- `w`: The HTTP response writer.
+- `status`: The HTTP status code for the response.
+- `data`: The data to be written as JSON.
+- `headers`: Optional custom headers to include in the response.
+
+**Returns**:
+
+- An error if the response writing fails.
+
+**Example**:
+
+```go
+t := &toolkit.Tools{}
+responseData := JSONResponse{Error: false, Message: "Success"}
+err := t.WriteJSON(w, http.StatusOK, responseData, customHeaders)
+if err != nil {
+    fmt.Println("Error:", err)
+}
+```
+
+#### ➡️ ErrorJSON
+
+Sends a JSON error response with an optional custom status code.
+
+**Parameters**:
+
+- `w`: The HTTP response writer.
+- `err`: The error to be included in the response.
+- `status`: Optional HTTP status code (default is 400).
+
+**Returns**:
+
+- An error if writing the error response fails.
+
+**Example**:
+
+```go
+t := &toolkit.Tools{}
+err := t.ErrorJSON(w, fmt.Errorf("something went wrong"))
+if err != nil {
+    fmt.Println("Error:", err)
+}
+```
+
 ## 🚩 Error Handling
 
 UploadFiles and UploadOneFile will return an error if:
@@ -109,18 +187,12 @@ This toolkit relies only on standard Go packages.
 
 The toolkit uses built-in `testing` package for testing app logic, and provides comprehensive tests that ensure that the functions behave correctly for different input conditions and handle edge cases, such as file type restrictions and renaming.
 
-## 🚀 Planned enhancements
-
-- [ ] Read JSON
-- [ ] Write JSON
-- [ ] Produce a JSON encoded error response
-- [x] Upload a file to a specified directory
-- [x] Download a static file
-- [x] Get a random string of provided length
-- [ ] Post JSON to a remote service
-- [x] Create a directory, including all parent directories, if it does not already exist
-- [x] Create a URL safe slug from a string
+Coverage: 89.9% of statements
 
 ## 📃 License
 
 This package is licensed under the MIT License. See LICENSE for more information.
+
+```
+
+```
