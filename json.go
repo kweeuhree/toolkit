@@ -86,8 +86,8 @@ func (t *Tools) ReadJSON(w http.ResponseWriter, r *http.Request, data interface{
 
 // WriteJSON() writes a JSON response with provided status, data and an optional custom header
 func (t *Tools) WriteJSON(w http.ResponseWriter, status int, data interface{}, headers ...http.Header) error {
-	// Attempt to marshal data into JSON
-	out, err := json.Marshal(data)
+	// Attempt to marshal the data into a pretty-printed JSON format
+	jsonData, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
 		return err
 	}
@@ -103,7 +103,7 @@ func (t *Tools) WriteJSON(w http.ResponseWriter, status int, data interface{}, h
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 
-	_, err = w.Write(out)
+	_, err = w.Write(jsonData)
 
 	if err != nil {
 		return err
