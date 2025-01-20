@@ -192,7 +192,3 @@ Coverage: 89.9% of statements
 ## 📃 License
 
 This package is licensed under the MIT License. See LICENSE for more information.
-
-```
-
-```
