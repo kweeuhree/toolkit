@@ -95,7 +95,7 @@ if err != nil {
 fmt.Println("Uploaded file:", uploadedFile.NewFileName)
 ```
 
-#### ReadJSON
+#### ➡️ ReadJSON
 
 Reads and decodes JSON data from an HTTP request body into the provided 'data' object. It validates the JSON format, checks the request size, and handles various error scenarios, including syntax errors, unknown fields, and unexpected EOF.
 
