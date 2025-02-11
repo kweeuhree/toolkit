@@ -43,6 +43,82 @@ randomStr := t.RandomString(16)
 fmt.Println(randomStr)  // e.g., "aB3fGz0a8sK2LsD8"
 ```
 
+#### ➡️CreateNewDirectory
+
+Creates a new directory if it does not exist. The directory is created with the following permissions:
+
+- Owner: read, write, execute
+- Group: read, execute
+- Others: read, execute
+
+**Parameters**:
+
+- `path`: The path of the directory to be created.
+
+**Returns**:
+
+- An error if the directory could not be created.
+
+**Example**:
+
+```go
+t := &toolkit.Tools{}
+err := t.CreateNewDirectory("/tmp/mydir")
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+---
+
+#### ➡️Slugify
+
+Converts a given string into a URL-friendly slug by replacing all non-alphanumeric characters with hyphens. Ensures that the resulting slug does not start or end with a hyphen and is not empty.
+
+**Parameters**:
+
+- `str`: The input string to be slugified.
+
+**Returns**:
+
+- A slugified string.
+- An error if the input string is empty or results in an empty slug.
+
+**Example**:
+
+```go
+t := &toolkit.Tools{}
+slug, err := t.Slugify("Hello, World!")
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Println(slug)  // "hello-world"
+```
+
+---
+
+#### ➡️DownloadStaticFile
+
+Serves a file from the server to the client for download.
+
+**Parameters**:
+
+- `w`: The HTTP response writer to write the file to.
+- `r`: The HTTP request received from the client.
+- `dirPath`: The directory path where the file is located.
+- `fileName`: The name of the file to be downloaded.
+- `displayName`: The name that the downloaded file should have on the client side.
+
+**Example**:
+
+```go
+t := &toolkit.Tools{}
+http.HandleFunc("/download", func(w http.ResponseWriter, r *http.Request) {
+    t.DownloadStaticFile(w, r, "./files", "example.pdf", "download.pdf")
+})
+log.Fatal(http.ListenAndServe(":8080", nil))
+```
+
 #### ➡️UploadFiles
 
 Uploads one or more files to a specified directory and gives the files a random name.
@@ -168,6 +244,27 @@ err := t.ErrorJSON(w, fmt.Errorf("something went wrong"))
 if err != nil {
     fmt.Println("Error:", err)
 }
+```
+
+#### ➡️ Sum
+
+Calculates the sum of all integers in the given slice.
+
+**Parameters**:
+
+- `ints`: A slice of integers to be summed.
+
+**Returns**:
+
+- An integer representing the total sum of all elements in the slice.
+
+**Example**:
+
+```go
+t := &toolkit.Tools{}
+numbers := []int{1, 2, 3, 4, 5}
+sum := t.Sum(numbers)
+fmt.Println(sum)  // Output: 15
 ```
 
 ## 🚩 Error Handling
