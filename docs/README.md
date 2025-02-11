@@ -18,7 +18,7 @@ The toolkit package provides essential helper methods for generating random stri
 ## Installation
 
 ```bash
-go get -u github.com/kweeuhree/toolbox
+go get -u github.com/kweeuhree/toolkit
 ```
 
 ## ⚙️ Functions
