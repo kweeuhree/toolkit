@@ -25,6 +25,8 @@ type Tools struct {
 	AllowedFileTypes   []string // Specify the file types to be permitted for uploading
 	MaxJSONSize        int      // Specify the max size of a JSON payload
 	AllowUnknownFields bool     // Permit the unknown fields
+	ErrorLog           Logger   // Allow for centralized error logging
+	InfoLog            Logger   // Allow for centralized info logging
 }
 
 // RandomString() takes in an integer that defines length of random string.
